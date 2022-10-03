@@ -48,7 +48,6 @@ def getCalidadSolucion(lineasGenoma, solucion, th):
         if diferencia >= th:
             calidad += 1
 
-        
     return calidad
 
 
@@ -154,25 +153,11 @@ def greedy(m,n,th,lineasGenoma, e=-1):
     # medir tiempo
     end = time.time()
 
-    print("")
-
-    if e > -1:
-        print("GREEDY ALEATORIZADO")
-    else:
-        print("GREEDY DETERMINISTA")
-
-    # solucion
-    print(f"Solucion: {sol}")
-
-    # tiempo de ejecucion
-    print("Tiempo de ejecucion: ", (end - start)*1000, "ms")
 
     calidadSolucion = getCalidadSolucion(lineasGenoma, sol, threshold)
-    # calidad de la solucion
-    print("Calidad de la solucion: ", calidadSolucion, "/", n)
 
 
-    return sol
+    return sol, (end - start)*1000, calidadSolucion
 
 
 # def eGreedy(m,n,th,lineaGenoma,e=0.1):
