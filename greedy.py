@@ -1,6 +1,9 @@
 from math import ceil
+import random
 import time
 
+
+charMap = ["A", "C", "G", "T"]
 
 def setupColumnas( n, m, lineasGenoma):
 
@@ -31,9 +34,26 @@ def setupColumnas( n, m, lineasGenoma):
     return columnas
 
 
+def getCalidadSolucion(lineasGenoma, solucion, th):
+
+    n = len(lineasGenoma)
+    m = len(lineasGenoma[0])
+    calidad = 0
+
+    for i in range(n):
+        diferencia = 0
+        for j in range(m):
+            if lineasGenoma[i][j] != solucion[j]:
+                diferencia += 1
+        if diferencia >= th:
+            calidad += 1
+
+        
+    return calidad
+
 
 # metodo greedy para FFMSP
-def greedy(m,n,th,lineasGenoma):
+def greedy(m,n,th,lineasGenoma, e=-1):
 
     # solucion inicial "XXXXX" 
     sol = "X" * m
@@ -57,8 +77,14 @@ def greedy(m,n,th,lineasGenoma):
     # y actualizamos los valores en gradoDiferenciaLineas
     for i in range(threshold - 1):
 
-        # cambio de caracter en la solucion en la posicion de la columna menos frecuente
-        sol = sol[:columnas[i]["posicion"]] + columnas[i]["charMenosFrecuente"] + sol[columnas[i]["posicion"] + 1:]
+        if random.random() < e:
+            # elegimos un caracter al azar
+            charToAdd = charMap[random.randint(0,3)]
+            # agregamos el caracter a la solucion
+            sol = sol[:columnas[i]["posicion"]] + charToAdd + sol[columnas[i]["posicion"] + 1:]
+        else:
+            # cambio de caracter en la solucion en la posicion de la columna menos frecuente
+            sol = sol[:columnas[i]["posicion"]] + columnas[i]["charMenosFrecuente"] + sol[columnas[i]["posicion"] + 1:]
 
         # actualizamos los valores de gradoDiferenciaLineas
         for j in range(n):
@@ -100,8 +126,15 @@ def greedy(m,n,th,lineasGenoma):
             gradoDiferenciaLineasAux = gradoDiferenciaLineas.copy()
             solAux = sol
 
-        # agregamos el caracter de la mejor columna a la solucion
-        sol = sol[:columnas[posicionMejorColumna]["posicion"]] + columnas[posicionMejorColumna]["charMenosFrecuente"] + sol[columnas[posicionMejorColumna]["posicion"] + 1:]
+
+        if random.random() < e:
+            # elegimos un caracter al azar
+            charToAdd = charMap[random.randint(0,3)]
+            # agregamos el caracter a la solucion
+            sol = sol[:columnas[posicionMejorColumna]["posicion"]] + charToAdd + sol[columnas[posicionMejorColumna]["posicion"] + 1:]
+        else:
+            # agregamos el caracter de la mejor columna a la solucion
+            sol = sol[:columnas[posicionMejorColumna]["posicion"]] + columnas[posicionMejorColumna]["charMenosFrecuente"] + sol[columnas[posicionMejorColumna]["posicion"] + 1:]
 
         for j in range(n):
             if lineasGenoma[j][columnas[posicionMejorColumna]["posicion"]] != columnas[posicionMejorColumna]["charMenosFrecuente"]:
@@ -121,15 +154,53 @@ def greedy(m,n,th,lineasGenoma):
     # medir tiempo
     end = time.time()
 
+    print("")
+
+    if e > -1:
+        print("GREEDY ALEATORIZADO")
+    else:
+        print("GREEDY DETERMINISTA")
+
     # solucion
-    print(sol)
+    print(f"Solucion: {sol}")
 
     # tiempo de ejecucion
     print("Tiempo de ejecucion: ", (end - start)*1000, "ms")
 
+    calidadSolucion = getCalidadSolucion(lineasGenoma, sol, threshold)
     # calidad de la solucion
-    print("Calidad de la solucion: ", mayorCalidad)
-
+    print("Calidad de la solucion: ", calidadSolucion, "/", n)
 
 
     return sol
+
+
+# def eGreedy(m,n,th,lineaGenoma,e=0.1):
+#     # solucion inicial "XXXXX" 
+#     sol = "X" * m
+
+#     # lista que almacena el char menos frecuente de cada columna
+#     # y la frecuencia que tiene
+#     columnas = setupColumnas(n, m, lineasGenoma)
+    
+#     # ordena las columnas por el char menos frecuente
+#     columnas.sort(key=lambda columna: columna["charFreq"])
+
+#     # lista que contiene el porcentaje de diferencia de cada linea del genoma con la solucion
+#     gradoDiferenciaLineas = [0] * n
+
+#     # medir tiempo
+#     start = time.time()
+
+
+#     threshold = int(ceil(th * m))
+
+#     gradoDiferenciaLineasAux = gradoDiferenciaLineas.copy()
+#     mayorCalidad = -1
+#     while len(columnas) > 0 and mayorCalidad < n:
+        
+#         solAux = sol
+
+#         # elegimos la posición de la columna a agregar a la solución
+#         if random.random() < e:
+#             posicionMejorColumna = random.randint(0, len(columnas) - 1)

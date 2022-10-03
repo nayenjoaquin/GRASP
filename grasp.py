@@ -25,8 +25,12 @@ def main():
     # Lee el archivo de entrada
     lineasGenoma, m, n  = parseInput(fileName)
 
-    # Ejecuta el algoritmo greedy
-    sol = greedy(m, n, th, lineasGenoma)
+    # Ejecuta el algoritmo greedy determinista
+    sol1 = greedy(m, n, th, lineasGenoma)
+
+    # Ejecuta el algoritmo greedy estocástico
+    sol2 = greedy(m, n, th, lineasGenoma, 0.1)
+
 
 
 
