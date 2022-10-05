@@ -4,6 +4,7 @@ from parseInput import parseInput
 from checkInput import checkInput
 from greedy import greedy
 from localSearch import localSearch
+from localSearch2 import localSearch as localSearch2
 
 
 def main():
@@ -28,12 +29,22 @@ def main():
     lineasGenoma, m, n  = parseInput(fileName)
 
     start = time.time()
+    bestSoFar = 0
 
-    soluciones = []
+    # GRASP utilizando busqueda local 1
+    # while time.time() - start < 60:
+    #     sol,calidad = greedy(m,n,th,lineasGenoma,0.1)
+    #     sol, calidad = localSearch(sol, lineasGenoma, th, m, bestSoFar, start)
+    #     if calidad > bestSoFar:
+    #         bestSoFar = calidad
 
+    # GRASP utilizando busqueda local 2
     while time.time() - start < 60:
-        sol,tiempo,calidad = greedy(m,n,th,lineasGenoma,0.1)
-        soluciones.append(localSearch(sol, lineasGenoma, th, m, n, calidad, start)) 
+        sol,calidad = greedy(m,n,th,lineasGenoma,0.1)
+        sol, calidad = localSearch2(sol, lineasGenoma, th, m, bestSoFar, start)
+        if calidad > bestSoFar:
+            bestSoFar = calidad
+
 
 
 

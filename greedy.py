@@ -157,7 +157,7 @@ def greedy(m,n,th,lineasGenoma, e=-1):
     calidadSolucion = getCalidadSolucion(lineasGenoma, sol, threshold)
 
 
-    return sol, (end - start)*1000, calidadSolucion
+    return sol, calidadSolucion
 
 
 # def eGreedy(m,n,th,lineaGenoma,e=0.1):
