@@ -52,7 +52,9 @@ def getCalidadSolucion(lineasGenoma, solucion, th):
 
 
 # metodo greedy para FFMSP
-def greedy(m,n,th,lineasGenoma, e=-1):
+def greedy(m,n,th,lineasGenoma, determinismo):
+
+    e = 1-determinismo
 
     # solucion inicial "XXXXX" 
     sol = "X" * m
